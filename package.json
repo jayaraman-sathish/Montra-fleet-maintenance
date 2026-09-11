@@ -1,0 +1,17 @@
+{
+  "name": "montra-fleet-maintenance",
+  "version": "1.0.0",
+  "description": "Montra Electric \u2014 Fleet Maintenance, Breakdown & Uptime Management System (Audree Infotech FINAL v3.0 baseline)",
+  "private": true,
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "start": "node src/index.ts",
+    "dev": "node --watch src/index.ts",
+    "db:reset": "node src/scripts/reset-db.ts",
+    "db:seed": "node src/scripts/seed-demo.ts",
+    "build:web": "node src/scripts/build-web.ts"
+  },
+  "type": "module"
+}

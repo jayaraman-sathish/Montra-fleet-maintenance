@@ -1,0 +1,44 @@
+# Render Blueprint — Montra Fleet Maintenance, Breakdown & Uptime Management
+#
+# Deploy with: Render dashboard → New → Blueprint → point at this repository.
+# Render reads this file and creates both the database and the web service.
+
+databases:
+  - name: montra-db
+    databaseName: montra
+    user: montra
+    plan: free
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: montra-fleet-maintenance
+    runtime: node
+    plan: free
+    region: singapore          # closest Render region to India
+    branch: main
+    buildCommand: "echo 'No build step — the application has no third-party dependencies'"
+    startCommand: "node src/index.ts"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22.11.0"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: montra-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      # Applies the schema and reference master data on first boot only.
+      - key: MIGRATE_ON_START
+        value: "true"
+      # Loads the demonstration fleet. Set to "false" for a real deployment.
+      - key: SEED_DEMO_DATA
+        value: "true"
+      # Signs session tokens. Render generates a strong random value.
+      - key: AUTH_SECRET
+        generateValue: true
+      # Shared key for the telematics ingestion endpoint.
+      - key: TELEMATICS_API_KEY
+        generateValue: true
